@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 60px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #e74c3c;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        .question {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            position: relative;
+            min-height: 120px;
+            align-items: center;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            position: absolute;
+        }
+
+        .celebration {
+            display: none;
+        }
+
+        .celebration.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .celebration h2 {
+            font-size: 2.5em;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+
+        .celebration p {
+            font-size: 1.3em;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .hearts {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        .date-info {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2em; }
+            .question { font-size: 1.2em; }
+            button { padding: 12px 30px; font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="proposal" class="proposal">
+            <h1>💕 Valentine's Day 💕</h1>
+            <p class="question">Will you be my Valentine?</p>
+            <div class="buttons">
+                <button id="yesBtn">Yes! 💖</button>
+                <button id="noBtn">No</button>
+            </div>
+        </div>
+
+        <div id="celebration" class="celebration">
+            <div class="hearts">💕 💖 💗 💕 💖</div>
+            <h2>Yay! 🎉</h2>
+            <p>I'm so happy you said yes!</p>
+            <p>You've made me the happiest person! 😊</p>
+            <div class="date-info">
+                📅 Valentine's Day: February 14, 2026
+            </div>
+            <div class="hearts">💕 💖 💗 💕 💖</div>
+        </div>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const proposal = document.getElementById('proposal');
+        const celebration = document.getElementById('celebration');
+        const buttonsContainer = document.querySelector('.buttons');
+
+        // Function to move the "No" button to a random position
+        function moveNoButton() {
+            const containerRect = buttonsContainer.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            // Calculate maximum positions to keep button within container
+            const maxX = containerRect.width - btnRect.width;
+            const maxY = containerRect.height - btnRect.height;
+            
+            // Generate random positions
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        // Move the "No" button when mouse gets near it
+        noBtn.addEventListener('mouseenter', moveNoButton);
+        
+        // Also move it when trying to click (for mobile)
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+
+        // Prevent clicking the "No" button
+        noBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            moveNoButton();
+        });
+
+        // Handle "Yes" button click
+        yesBtn.addEventListener('click', () => {
+            proposal.style.display = 'none';
+            celebration.classList.add('active');
+            
+            // Create floating hearts animation
+            createFloatingHearts();
+        });
+
+        // Create floating hearts effect
+        function createFloatingHearts() {
+            const hearts = ['💕', '💖', '💗', '💝', '💘'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.position = 'fixed';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.top = '100vh';
+                heart.style.fontSize = '2em';
+                heart.style.animation = 'float 4s ease-in-out';
+                heart.style.pointerEvents = 'none';
+                heart.style.zIndex = '1000';
+                
+                document.body.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 4000);
+            }, 300);
+        }
+
+        // Add CSS animation for floating hearts
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+                100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize "No" button position
+        moveNoButton();
+    </script>
+</body>
+</html>
